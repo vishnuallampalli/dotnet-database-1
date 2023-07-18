@@ -1,0 +1,18 @@
+---
+- name: Install Helm and Deploy Helm Chart
+  hosts: Master
+  tasks:
+    - name: Copy Helm chart
+      copy:
+        src: /home/azureuser/db-helm
+        dest: /home/ubuntu/
+   
+    - name: Install Helm chart
+      command: helm upgrade --install db /home/ubuntu/db-helm --kubeconfig ~/.kube/config
+      register: helm_output
+      ignore_errors: true
+    
+    - name: Debug Helm output
+      debug:
+       var: helm_output
+

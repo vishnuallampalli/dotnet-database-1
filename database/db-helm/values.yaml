@@ -1,0 +1,25 @@
+replicaCount: 1
+
+labels:
+  app: mongo-db
+
+container:
+  image: mongo:4.4
+  port: 27017
+  volumeName: mo-data
+  volumeMountPath: /data/db
+  env:
+    username: "admin"
+    password: "admin"
+    database: "EmployeeDB"
+
+volumeClaim:
+  claimName: mo-data-pvc
+
+restartPolicy: Always
+
+
+service:
+  port: 27017
+  targetPort: 27017
+

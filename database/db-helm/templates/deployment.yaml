@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.labels.app }}
+  name: mongodb-deployment.fullname
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: mongodb-pod
+  template:
+    metadata:
+      labels:
+        app: mongodb-pod
+    spec:
+      containers:
+      - name: mongodb
+        volumeMounts:
+          - mountPath: {{ .Values.container.volumeMountPath }}
+            name: {{ .Values.container.volumeName }}
+        image: {{ .Values.container.image }}
+        ports:
+        - containerPort: {{ .Values.container.port }}
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: {{ .Values.container.env.username }}
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: {{ .Values.container.env.password }}
+          - name: MONGO_INITDB_DATABASE
+            value: {{ .Values.container.env.database }}
+      volumes:
+      - name: {{ .Values.container.volumeName }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.volumeClaim.claimName }}
+      restartPolicy: {{ .Values.restartPolicy }}
+
